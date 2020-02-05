@@ -13,9 +13,9 @@ PIDS = ["mzr02"]
 experiment = {
     "bid": "test_problems",
     "pids": PIDS,
-    "limit": "T1",  # "G10000-T60"
+    "limit": "T720",  # "G10000-T60"
     "cores": 4,
-    "eargs": "-s --free-numbers"
+    "eargs": "-s --free-numbers --resources-info --print-statistics --free-numbers"
 }
 
 
