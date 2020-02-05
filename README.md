@@ -7,6 +7,9 @@ This project helps you to compare two different versions of eprover ... or more 
 Just extend the script for your purposes.
 This script uses the seaborn library for plotting.
 
+This script relies on the pyprove project.
+You should be familiar with it for this project to work for you.
+
 ## Input files
 
 Normaly you should have a directory containing all the problem files you want to evaluate.
