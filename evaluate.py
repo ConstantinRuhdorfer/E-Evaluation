@@ -8,12 +8,15 @@ from pprint import pprint
 
 sns.set()
 
-PIDS = ["mzr02", "mzr02WL1_000"]
+# PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
+#         "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
+
+PIDS = ["mzr02WL10_000FP8", "mzr02WL10_000NoIndex"]
 
 experiment = {
     "bid": "test_problems",
     "pids": PIDS,
-    "limit": "T1",  # "G10000-T60"
+    "limit": "G10000",  # "G10000-T60"
     "cores": 4,
     "eargs": "-s --free-numbers --resources-info --print-statistics"
 }
@@ -35,6 +38,7 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
     processed_clauses = np.empty(len(results))
     generated_clauses = np.empty(len(results))
     status = np.empty(len(results), dtype=object)
+    strategy = np.empty(len(results), dtype=object)
     names = np.empty(len(results), dtype=object)
     limitation = np.empty(len(results), dtype=object)
 
@@ -45,14 +49,22 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
             processed_clauses[i] = results[result]["PROCESSED"]
             generated_clauses[i] = results[result]["GENERATED"]
             status[i] = results[result]["STATUS"]
-            names[i] = result[1] + "__" + result[2]
+            strategy[i] = result[1]
+            names[i] = result[2]
             limitation[i] = result[3]
         else:
-            runtimes[i] = np.nan
-            processed_clauses[i] = np.nan
-            generated_clauses[i] = np.nan
+            runtimes[i] = results[result]["RUNTIME"]
+            if "PROCESSED" in results[result]:
+                processed_clauses[i] = results[result]["PROCESSED"]
+            else:
+                processed_clauses[i] = np.nan
+            if "GENERATED" in results[result]:
+                generated_clauses[i] = results[result]["GENERATED"]
+            else:
+                generated_clauses[i] = np.nan
             status[i] = results[result]["STATUS"]
-            names[i] = result[1] + "__" + result[2]
+            strategy[i] = result[1]
+            names[i] = result[2]
             limitation[i] = result[3]
         i += 1
 
@@ -61,6 +73,7 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
         "processed_clauses": processed_clauses,
         "generated_clauses": generated_clauses,
         "status": status,
+        "strategy": strategy,
         "names": names,
         "limitation": limitation
     }
@@ -72,11 +85,10 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
         sep=';',
         encoding='utf-8',
         index=False)
-    line_plt = sns.lineplot(
-        x="runtimes", y="processed_clauses", data=presentation_df)
-    fig = line_plt.get_figure()
-    fig.savefig(fig_name)
+    # line_plt = sns.lineplot(
+    #     x="runtimes", y="processed_clauses", data=presentation_df)
+    # fig = line_plt.get_figure()
+    # fig.savefig(fig_name)
 
 
 evaluate("new_version", experiment)
-evaluate("original", experiment, "eprover_original")
