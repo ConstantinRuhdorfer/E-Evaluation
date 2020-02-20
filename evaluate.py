@@ -1,23 +1,23 @@
-import seaborn as sns
+# import seaborn as sns
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import datetime
 from pyprove import *
 from pprint import pprint
 
-sns.set()
+# sns.set()
 
-# PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
-#         "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
+PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
+        "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
 
-PIDS = ["mzr02WL10_000FP8", "mzr02WL10_000NoIndex"]
+# PIDS = ["mzr02WL10_000FP8", "mzr02WL10_000NoIndex"]
 
 experiment = {
-    "bid": "test_problems",
+    "bid": "mizar40-tenth",
     "pids": PIDS,
-    "limit": "G10000",  # "G10000-T60"
-    "cores": 4,
+    "limit": "G10000-T720",  # "G10000-T60"
+    "cores": 24,
     "eargs": "-s --free-numbers --resources-info --print-statistics"
 }
 
@@ -41,31 +41,50 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
     strategy = np.empty(len(results), dtype=object)
     names = np.empty(len(results), dtype=object)
     limitation = np.empty(len(results), dtype=object)
+    c_p_c = np.empty(len(results), dtype=object)
+    c_p_p_o_c  = np.empty(len(results), dtype=object)
+    c_p_p_n_o_c  = np.empty(len(results), dtype=object)
+    c_p_n_uc  = np.empty(len(results), dtype=object)
+    c_p_non_uc  = np.empty(len(results), dtype=object)
 
     i = 0
     for result in results:
-        if results[result]["STATUS"] != "ResourceOut":
+        if "RUNTIME" in results[result]:
             runtimes[i] = results[result]["RUNTIME"]
-            processed_clauses[i] = results[result]["PROCESSED"]
-            generated_clauses[i] = results[result]["GENERATED"]
-            status[i] = results[result]["STATUS"]
-            strategy[i] = result[1]
-            names[i] = result[2]
-            limitation[i] = result[3]
         else:
-            runtimes[i] = results[result]["RUNTIME"]
-            if "PROCESSED" in results[result]:
-                processed_clauses[i] = results[result]["PROCESSED"]
-            else:
-                processed_clauses[i] = np.nan
-            if "GENERATED" in results[result]:
-                generated_clauses[i] = results[result]["GENERATED"]
-            else:
-                generated_clauses[i] = np.nan
-            status[i] = results[result]["STATUS"]
-            strategy[i] = result[1]
-            names[i] = result[2]
-            limitation[i] = result[3]
+            runtimes[i] = 720
+        if "PROCESSED" in results[result]:
+            processed_clauses[i] = results[result]["PROCESSED"]
+        else:
+            processed_clauses[i] = np.nan
+        if "GENERATED" in results[result]:
+            generated_clauses[i] = results[result]["GENERATED"]
+        else:
+            generated_clauses[i] = np.nan
+        if "CURR_PROCESSED_CLAUSES" in results[result]:
+            c_p_c[i] = results[result]["CURR_PROCESSED_CLAUSES"]
+        else:
+            c_p_c[i] = np.nan
+        if "CURR_PROCESSED_POS_OR_UC" in results[result]:
+            c_p_p_o_c[i] = results[result]["CURR_PROCESSED_POS_OR_UC"]
+        else:
+            c_p_p_o_c[i] = np.nan
+        if "CURR_PROCESSED_POS_NOT_OR_UC" in results[result]:
+            c_p_p_n_o_c[i] = results[result]["CURR_PROCESSED_POS_NOT_OR_UC"]
+        else:
+            c_p_p_n_o_c[i] = np.nan
+        if "CURR_PROCESSED_NEG_UC" in results[result]:
+            c_p_n_uc[i] = results[result]["CURR_PROCESSED_NEG_UC"]
+        else:
+            c_p_n_uc[i] = np.nan
+        if "CURR_PROCESSED_NON_UC" in results[result]:
+            c_p_non_uc[i] = results[result]["CURR_PROCESSED_NON_UC"]
+        else:
+            c_p_non_uc[i] = np.nan 
+        status[i] = results[result]["STATUS"]
+        strategy[i] = result[1]
+        names[i] = result[2]
+        limitation[i] = result[3]
         i += 1
 
     presentation_data = {
@@ -75,7 +94,12 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
         "status": status,
         "strategy": strategy,
         "names": names,
-        "limitation": limitation
+        "limitation": limitation,
+        "CURR_PROCESSED_CLAUSES": c_p_c,
+        "CURR_PROCESSED_POS_OR_UC": c_p_p_o_c,
+        "CURR_PROCESSED_POS_NOT_OR_UC": c_p_p_n_o_c,
+        "CURR_PROCESSED_NEG_UC": c_p_n_uc,
+        "CURR_PROCESSED_NON_UC": c_p_non_uc
     }
 
     presentation_df = pd.DataFrame(data=presentation_data)
@@ -91,4 +115,4 @@ def evaluate(fig_name, experiment, ebinary="eprover"):
     # fig.savefig(fig_name)
 
 
-evaluate("new_version", experiment)
+evaluate("new_version", experiment, "/local1/constantinr/cr_eprover/PROVER/eprover")
