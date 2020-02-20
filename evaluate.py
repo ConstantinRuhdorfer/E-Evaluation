@@ -5,10 +5,11 @@ import datetime
 from pyprove import *
 from pprint import pprint
 
-PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
-        "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
+# PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
+#        "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
 
-# PIDS = ["mzr02WL10_000FP8", "mzr02WL10_000NoIndex"]
+PIDS = ["mzr02WL10_000FP6", "mzr02WL10_000NoIndex",
+        "mzr02WL10_000NoIndexConstantAbstraction", "mzr02WL10_000NoIndexSkolemAbstraction"]
 
 experiment = {
     "bid": "mizar40-tenth",
