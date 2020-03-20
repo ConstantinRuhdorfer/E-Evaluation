@@ -8,8 +8,13 @@ from pprint import pprint
 # PIDS = ["mzr02WL10_000FP2", "mzr02WL10_000FP4", "mzr02WL10_000FP6",
 #        "mzr02WL10_000FP8", "mzr02WL10_000FP10", "mzr02WL10_000NoIndex"]
 
-PIDS = ["mzr02WL10_000FP6", "mzr02WL10_000NoIndex",
-        "mzr02WL10_000NoIndexConstantAbstraction", "mzr02WL10_000NoIndexSkolemAbstraction"]
+# PIDS = ["mzr02WL10_000FP6", "mzr02WL10_000NoIndex",
+#        "mzr02WL10_000NoIndexConstantAbstraction", "mzr02WL10_000NoIndexSkolemAbstraction"]
+
+# Skip 2LL since its only a wrapper for 2L:
+PIDS = ["mzr02WL10_000FP2L", "mzr02WL10_000FP4L", "mzr02WL10_000FP6L",
+        "mzr02WL10_000FP8L", "mzr02WL10_000FP10L", "mzr02WL10_000FP4LL",
+        "mzr02WL10_000FP6LL", "mzr02WL10_000FP8LL", "mzr02WL10_000FP10LL"]
 
 experiment = {
     "bid": "mizar40-tenth",
